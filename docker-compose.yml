@@ -1,0 +1,101 @@
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: marketlab-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: marketlab
+      POSTGRES_PASSWORD: marketlab_secret
+      POSTGRES_DB: marketlab_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U marketlab -d marketlab_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: marketlab-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: marketlab-backend
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql+psycopg://marketlab:marketlab_secret@postgres:5432/marketlab_db
+      REDIS_URL: redis://redis:6379/0
+      APP_ENV: production
+      LLM_PROVIDER: mock
+      MARKET_DATA_PROVIDER: fixture
+      INTERNAL_AUTOMATION_TOKEN: marketlab-internal-automation-token-secure
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: marketlab-worker
+    restart: unless-stopped
+    command: ["python", "-m", "app.worker.worker"]
+    environment:
+      DATABASE_URL: postgresql+psycopg://marketlab:marketlab_secret@postgres:5432/marketlab_db
+      REDIS_URL: redis://redis:6379/0
+      APP_ENV: production
+      LLM_PROVIDER: mock
+      MARKET_DATA_PROVIDER: fixture
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: marketlab-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
+  n8n:
+    image: n8nio/n8n:latest
+    container_name: marketlab-n8n
+    restart: unless-stopped
+    ports:
+      - "5678:5678"
+    environment:
+      - N8N_BASIC_AUTH_ACTIVE=true
+      - N8N_BASIC_AUTH_USER=admin
+      - N8N_BASIC_AUTH_PASSWORD=marketlab_admin
+    volumes:
+      - n8n_data:/home/node/.n8n
+
+volumes:
+  postgres_data:
+  redis_data:
+  n8n_data:

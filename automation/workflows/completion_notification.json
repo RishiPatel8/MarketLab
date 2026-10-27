@@ -1,0 +1,90 @@
+{
+  "name": "MarketLab AI — Report Completion & Notification",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "notify-completion",
+        "options": {}
+      },
+      "id": "1",
+      "name": "Report Completed Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=http://backend:8000/api/v1/research/{{$json.body.run_id}}/report",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-API-Key",
+              "value": "={{$env.API_KEY || 'marketlab-test-key'}}"
+            }
+          ]
+        }
+      },
+      "id": "2",
+      "name": "Fetch Report Payload",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [480, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://backend:8000/api/v1/internal/automation-events",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Internal-Token",
+              "value": "={{$env.INTERNAL_AUTOMATION_TOKEN}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"workflow_name\": \"completion_notification\",\n  \"run_id\": \"{{$json.run_id}}\",\n  \"status\": \"dispatched\",\n  \"sentiment\": \"{{$json.sentiment_label}}\"\n}"
+      },
+      "id": "3",
+      "name": "Confirm Delivery Log",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [720, 300]
+    }
+  ],
+  "connections": {
+    "Report Completed Webhook": {
+      "main": [
+        [
+          {
+            "node": "Fetch Report Payload",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Report Payload": {
+      "main": [
+        [
+          {
+            "node": "Confirm Delivery Log",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {}
+}
