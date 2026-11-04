@@ -28,6 +28,13 @@ class ResearchReportResponse(BaseModel):
     sentiment_label: str  # bullish, neutral, bearish, inconclusive
     report_timestamp: datetime
     data_coverage: Dict[str, Any]
+    market_data_provider: Optional[str] = "fixture"
+    is_fixture: Optional[bool] = True
+    latency_type: Optional[str] = "historical"
+    embedding_provider: Optional[str] = "mock"
+    is_mock_embedding: Optional[bool] = True
+    llm_provider: Optional[str] = "mock"
+    llm_model: Optional[str] = "mock"
     executive_summary: str
     business_financial_analysis: Optional[str] = None
     technical_analysis: Optional[str] = None
@@ -39,5 +46,22 @@ class ResearchReportResponse(BaseModel):
     sources: List[ResearchSourceCitation] = []
     verification: VerificationFindings
     limitations: List[str] = []
+    # Decision Intelligence extensions
+    decision_rating: str = "INSUFFICIENT_EVIDENCE"  # BUY, HOLD, SELL, INSUFFICIENT_EVIDENCE
+    entry_price_min: Optional[float] = None
+    entry_price_max: Optional[float] = None
+    fair_value_min: Optional[float] = None
+    fair_value_max: Optional[float] = None
+    target_bull: Optional[float] = None
+    target_base: Optional[float] = None
+    target_bear: Optional[float] = None
+    stop_loss_price: Optional[float] = None
+    horizon_type: Optional[str] = "medium_term"
+    strategy_consensus: Optional[Dict[str, Any]] = None
+    scenario_projections: Optional[List[Dict[str, Any]]] = None
+    sebi_notice: str = (
+        "SEBI Non-Advisory Notice: MarketLab AI is a non-brokerage quantitative research and virtual simulation environment. "
+        "Outputs are for research support and do not constitute registered investment advice."
+    )
     report_markdown: str
     is_completed_with_limitations: bool = False

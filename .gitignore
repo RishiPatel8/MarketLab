@@ -54,6 +54,14 @@ frontend/build/
 .DS_Store
 Thumbs.db
 
+# Logs
+*.log
+backend/uvicorn.log
+
+# External / Local Utilities
+tunnel-client/
+website-builder-mcp/
+
 # Database & Storage
 *.sqlite
 *.sqlite3

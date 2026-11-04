@@ -9,7 +9,13 @@ import {
   Info,
   Calendar,
   CheckCircle,
-  Hash
+  Hash,
+  X,
+  Target,
+  Shield,
+  Activity,
+  Layers,
+  Scale
 } from 'lucide-react';
 import { ResearchReport, ResearchSourceCitation } from '../types';
 
@@ -29,7 +35,7 @@ export const ReportViewer: React.FC<ReportViewerProps> = ({ report }) => {
       <div className="p-6 rounded-card bg-obsidian-card border border-obsidian-border relative overflow-hidden">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <div className="flex items-center gap-2 mb-1.5">
+            <div className="flex flex-wrap items-center gap-2 mb-2">
               <span className="text-xs font-mono text-gold px-2 py-0.5 rounded bg-gold/10 border border-gold/20">
                 {report.instrument.exchange}:{report.instrument.symbol}
               </span>
@@ -37,9 +43,43 @@ export const ReportViewer: React.FC<ReportViewerProps> = ({ report }) => {
                 <Calendar className="w-3.5 h-3.5" />
                 {new Date(report.report_timestamp).toLocaleDateString()}
               </span>
+
+              {/* Data Provenance Badge */}
+              {report.is_fixture ? (
+                <span className="text-[11px] font-bold px-2 py-0.5 rounded bg-gold/10 text-gold border border-gold/30">
+                  FIXTURE DATA
+                </span>
+              ) : (
+                <span className="text-[11px] font-bold px-2 py-0.5 rounded bg-market-positive/10 text-market-positive border border-market-positive/30">
+                  LIVE PROVIDER RESPONSE ({report.market_data_provider?.toUpperCase() || 'LIVE'})
+                </span>
+              )}
+
+              {/* Embedding Provenance Badge */}
+              {report.is_mock_embedding ? (
+                <span className="text-[11px] font-bold px-2 py-0.5 rounded bg-obsidian-elevated text-obsidian-secondary border border-obsidian-border">
+                  MOCK EMBEDDINGS
+                </span>
+              ) : (
+                <span className="text-[11px] font-bold px-2 py-0.5 rounded bg-market-info/10 text-market-info border border-market-info/30">
+                  REAL EMBEDDINGS
+                </span>
+              )}
+
+              {/* Source Verification Badge */}
+              {report.verification?.verification_passed ? (
+                <span className="text-[11px] font-bold px-2 py-0.5 rounded bg-market-positive/10 text-market-positive border border-market-positive/30">
+                  SOURCE VERIFIED
+                </span>
+              ) : (
+                <span className="text-[11px] font-bold px-2 py-0.5 rounded bg-market-warning/10 text-market-warning border border-market-warning/30">
+                  SOURCE UNVERIFIED
+                </span>
+              )}
+
               {report.is_completed_with_limitations && (
-                <span className="text-xs text-market-warning px-2 py-0.5 rounded bg-market-warning/10 border border-market-warning/20">
-                  Limitations Flagged
+                <span className="text-[11px] font-bold text-market-warning px-2 py-0.5 rounded bg-market-warning/10 border border-market-warning/20">
+                  PARTIAL RESEARCH
                 </span>
               )}
             </div>
@@ -63,6 +103,34 @@ export const ReportViewer: React.FC<ReportViewerProps> = ({ report }) => {
             </div>
           </div>
         </div>
+
+        {/* Provenance Metadata Bar */}
+        <div className="mt-4 pt-3 border-t border-obsidian-border/50 grid grid-cols-2 sm:grid-cols-4 gap-2 text-[11px]">
+          <div>
+            <span className="text-obsidian-muted block">Market Data Feed:</span>
+            <span className="font-mono text-obsidian-text font-semibold uppercase">
+              {report.market_data_provider || 'FIXTURE'} ({report.latency_type || 'HISTORICAL'})
+            </span>
+          </div>
+          <div>
+            <span className="text-obsidian-muted block">LLM Orchestrator:</span>
+            <span className="font-mono text-obsidian-text font-semibold uppercase">
+              {report.llm_provider || 'MOCK'} ({report.llm_model || 'default'})
+            </span>
+          </div>
+          <div>
+            <span className="text-obsidian-muted block">Citations Grounding:</span>
+            <span className="font-mono text-gold font-semibold">
+              {report.sources?.length || 0} Ingested Disclosures
+            </span>
+          </div>
+          <div>
+            <span className="text-obsidian-muted block">Audit Integrity:</span>
+            <span className={`font-mono font-semibold ${report.verification?.calculation_consistency ? 'text-market-positive' : 'text-market-warning'}`}>
+              {report.verification?.calculation_consistency ? 'Calculations Verified' : 'Anomalies Flagged'}
+            </span>
+          </div>
+        </div>
       </div>
 
       {/* Executive Summary */}
@@ -79,6 +147,184 @@ export const ReportViewer: React.FC<ReportViewerProps> = ({ report }) => {
           deterministic moving average alignment (20-day vs 50-day SMA), operating margins, debt trajectory, and
           verified regulatory disclosures. Not guaranteed future returns.
         </div>
+      </div>
+
+      {/* Decision Intelligence & Valuation Engine */}
+      <div className="p-6 rounded-card bg-obsidian-card border border-gold/40 space-y-6 relative overflow-hidden">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-obsidian-border/70">
+          <div>
+            <span className="text-[10px] font-bold tracking-wider text-gold uppercase block mb-1">
+              Deterministic Decision Intelligence
+            </span>
+            <h3 className="text-lg font-bold text-obsidian-text flex items-center gap-2">
+              <Target className="w-5 h-5 text-gold" />
+              2. Quantitative Investment Assessment
+            </h3>
+          </div>
+
+          {/* Rating Pill */}
+          <div className="flex items-center gap-3">
+            <span className="text-xs text-obsidian-muted">System Recommendation:</span>
+            <div
+              className={`px-4 py-2 rounded-xl border text-sm font-bold tracking-wider uppercase flex items-center gap-2 ${
+                report.decision_rating === 'BUY'
+                  ? 'bg-market-positive/15 border-market-positive/40 text-market-positive'
+                  : report.decision_rating === 'SELL'
+                  ? 'bg-market-negative/15 border-market-negative/40 text-market-negative'
+                  : report.decision_rating === 'HOLD'
+                  ? 'bg-gold/15 border-gold/40 text-gold'
+                  : 'bg-market-warning/15 border-market-warning/40 text-market-warning'
+              }`}
+            >
+              <Activity className="w-4 h-4" />
+              <span>{report.decision_rating || 'INSUFFICIENT EVIDENCE'}</span>
+            </div>
+          </div>
+        </div>
+
+        {/* 4-Metric Actionable Grid */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <div className="p-3.5 rounded-xl bg-obsidian-bg border border-obsidian-border">
+            <span className="text-[10px] text-obsidian-muted uppercase block mb-1">Potential Entry Range</span>
+            <span className="text-sm md:text-base font-bold font-mono text-gold tabular-nums">
+              {report.entry_price_min && report.entry_price_max
+                ? `₹${report.entry_price_min.toFixed(2)} - ₹${report.entry_price_max.toFixed(2)}`
+                : 'Market Dependent'}
+            </span>
+            <span className="text-[11px] text-obsidian-muted block mt-1">Based on ATR & Moving Averages</span>
+          </div>
+
+          <div className="p-3.5 rounded-xl bg-obsidian-bg border border-obsidian-border">
+            <span className="text-[10px] text-obsidian-muted uppercase block mb-1">DCF Fair Value Range</span>
+            <span className="text-sm md:text-base font-bold font-mono text-obsidian-text tabular-nums">
+              {report.fair_value_min && report.fair_value_max
+                ? `₹${report.fair_value_min.toFixed(2)} - ₹${report.fair_value_max.toFixed(2)}`
+                : 'Insufficient FCF History'}
+            </span>
+            <span className="text-[11px] text-obsidian-muted block mt-1">Sensitivity Matrix Evaluated</span>
+          </div>
+
+          <div className="p-3.5 rounded-xl bg-obsidian-bg border border-obsidian-border">
+            <span className="text-[10px] text-obsidian-muted uppercase block mb-1">Downside Invalidation (Stop-Loss)</span>
+            <span className="text-sm md:text-base font-bold font-mono text-market-negative tabular-nums">
+              {report.stop_loss_price ? `₹${report.stop_loss_price.toFixed(2)}` : 'N/A'}
+            </span>
+            <span className="text-[11px] text-obsidian-muted block mt-1">2.0x ATR Below Floor Support</span>
+          </div>
+
+          <div className="p-3.5 rounded-xl bg-obsidian-bg border border-obsidian-border">
+            <span className="text-[10px] text-obsidian-muted uppercase block mb-1">Multi-Strategy Consensus</span>
+            <span className="text-sm md:text-base font-bold font-mono text-market-positive tabular-nums">
+              {report.strategy_consensus
+                ? `${report.strategy_consensus.consensus_percentage}% ${report.strategy_consensus.consensus_rating}`
+                : '50% Ensemble Alignment'}
+            </span>
+            <span className="text-[11px] text-obsidian-muted block mt-1">
+              {report.strategy_consensus ? `${report.strategy_consensus.buy_signals} Buy / ${report.strategy_consensus.total_strategies} Total` : 'Evaluated across 10 models'}
+            </span>
+          </div>
+        </div>
+
+        {/* Probabilistic Scenarios Table */}
+        {report.scenario_projections && report.scenario_projections.length > 0 && (
+          <div className="space-y-3 pt-2">
+            <div className="flex items-center justify-between">
+              <h4 className="text-xs font-semibold text-obsidian-text uppercase tracking-wider flex items-center gap-1.5">
+                <Scale className="w-4 h-4 text-gold" />
+                Scenario Projections & Price Targets
+              </h4>
+              <span className="text-[11px] text-obsidian-muted">Horizon: {report.horizon_type || '6 Months'}</span>
+            </div>
+
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs">
+                <thead>
+                  <tr className="border-b border-obsidian-border text-obsidian-muted">
+                    <th className="pb-2 font-medium">Scenario</th>
+                    <th className="pb-2 font-medium">Probability</th>
+                    <th className="pb-2 font-medium">Target Price</th>
+                    <th className="pb-2 font-medium">Expected Return</th>
+                    <th className="pb-2 font-medium">Underlying Rationale</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-obsidian-border/40 font-mono">
+                  {report.scenario_projections.map((sc, idx) => {
+                    const isPositive = sc.expected_return_pct >= 0;
+                    return (
+                      <tr key={idx} className="hover:bg-obsidian-hover/40 transition-colors">
+                        <td className="py-2.5 font-bold">
+                          <span
+                            className={`px-2 py-0.5 rounded text-[11px] ${
+                              sc.scenario === 'BULL'
+                                ? 'bg-market-positive/15 text-market-positive'
+                                : sc.scenario === 'BEAR'
+                                ? 'bg-market-negative/15 text-market-negative'
+                                : 'bg-gold/15 text-gold'
+                            }`}
+                          >
+                            {sc.scenario}
+                          </span>
+                        </td>
+                        <td className="py-2.5 text-obsidian-secondary font-sans font-medium">
+                          {(sc.probability * 100).toFixed(0)}%
+                        </td>
+                        <td className="py-2.5 text-obsidian-text font-bold">₹{sc.target_price.toFixed(2)}</td>
+                        <td className={`py-2.5 font-bold ${isPositive ? 'text-market-positive' : 'text-market-negative'}`}>
+                          {isPositive ? '+' : ''}{sc.expected_return_pct.toFixed(1)}%
+                        </td>
+                        <td className="py-2.5 text-obsidian-secondary font-sans text-[11px] max-w-xs leading-relaxed">
+                          {sc.rationale}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {/* Multi-Strategy Consensus Breakdown */}
+        {report.strategy_consensus && report.strategy_consensus.signals && report.strategy_consensus.signals.length > 0 && (
+          <div className="space-y-3 pt-3 border-t border-obsidian-border/50">
+            <div className="flex items-center justify-between">
+              <h4 className="text-xs font-semibold text-obsidian-text uppercase tracking-wider flex items-center gap-1.5">
+                <Layers className="w-4 h-4 text-gold" />
+                10-Model Quantitative Ensemble Signals
+              </h4>
+              <span className="text-[11px] text-obsidian-muted">
+                {report.strategy_consensus.buy_signals} BUY • {report.strategy_consensus.hold_signals} HOLD • {report.strategy_consensus.sell_signals} SELL
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5">
+              {report.strategy_consensus.signals.map((sig, idx) => (
+                <div key={idx} className="p-3 rounded-lg bg-obsidian-bg border border-obsidian-border text-xs flex flex-col justify-between">
+                  <div className="flex items-center justify-between mb-1.5">
+                    <span className="font-semibold text-obsidian-text truncate max-w-[150px]">{sig.name}</span>
+                    <span
+                      className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${
+                        sig.signal === 'BUY'
+                          ? 'bg-market-positive/15 text-market-positive border border-market-positive/30'
+                          : sig.signal === 'SELL'
+                          ? 'bg-market-negative/15 text-market-negative border border-market-negative/30'
+                          : 'bg-gold/15 text-gold border border-gold/30'
+                      }`}
+                    >
+                      {sig.signal}
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-obsidian-muted mb-2 leading-tight">{sig.summary}</p>
+                  <div className="flex items-center justify-between text-[10px] text-obsidian-secondary border-t border-obsidian-border/50 pt-1.5 font-mono">
+                    <span>CAGR: {sig.cagr !== undefined ? `${sig.cagr}%` : 'N/A'}</span>
+                    <span>Win: {sig.win_rate !== undefined ? `${sig.win_rate}%` : 'N/A'}</span>
+                    <span>Sharpe: {sig.sharpe_ratio !== undefined ? sig.sharpe_ratio : 'N/A'}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Grid: Financial & Technical Metrics */}
@@ -322,6 +568,20 @@ export const ReportViewer: React.FC<ReportViewerProps> = ({ report }) => {
         </div>
       </div>
 
+      {/* SEBI Statutory Compliance & Educational Disclaimer */}
+      <div className="p-5 rounded-card bg-obsidian-card border border-gold/30 space-y-2">
+        <div className="flex items-center gap-2 text-gold">
+          <Shield className="w-4 h-4" />
+          <h4 className="text-xs font-bold tracking-wide uppercase">
+            SEBI Regulatory & Decision-Support Notice
+          </h4>
+        </div>
+        <p className="text-xs text-obsidian-secondary leading-relaxed">
+          {report.sebi_notice ||
+            'MarketLab AI is an algorithmic quantitative research, backtesting, and virtual simulation platform engineered strictly for educational and decision-support purposes. It is NOT registered as a SEBI Investment Adviser or Research Analyst under the SEBI (Research Analysts) Regulations, 2014. No output, model projection, or strategy signal constitutes an offer, solicitation, or recommendation to buy, hold, or sell any security. Capital markets carry inherent risks; past simulated performance does not guarantee future results.'}
+        </p>
+      </div>
+
       {/* Citation Passage Modal */}
       {selectedCitation && (
         <div className="fixed inset-0 bg-obsidian-bg/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
@@ -330,9 +590,10 @@ export const ReportViewer: React.FC<ReportViewerProps> = ({ report }) => {
               <h4 className="font-bold text-sm text-obsidian-text truncate max-w-md">{selectedCitation.source_title}</h4>
               <button
                 onClick={() => setSelectedCitation(null)}
-                className="text-obsidian-muted hover:text-obsidian-text text-sm"
+                className="text-obsidian-muted hover:text-obsidian-text p-1 rounded hover:bg-obsidian-elevated transition-colors"
+                aria-label="Close modal"
               >
-                ✕
+                <X className="w-4 h-4" />
               </button>
             </div>
             <div className="flex items-center gap-3 text-xs text-obsidian-secondary">
@@ -343,14 +604,14 @@ export const ReportViewer: React.FC<ReportViewerProps> = ({ report }) => {
               <span>•</span>
               <span>Relevance: {(selectedCitation.confidence_score * 100).toFixed(0)}%</span>
             </div>
-            <div className="p-4 rounded-xl bg-obsidian-bg border border-obsidian-border text-xs text-obsidian-secondary leading-relaxed max-h-60 overflow-y-auto">
+            <div className="p-4 rounded-md bg-obsidian-bg border border-obsidian-border text-xs text-obsidian-secondary leading-relaxed max-h-60 overflow-y-auto">
               "{selectedCitation.citation_text}"
             </div>
             <div className="pt-2 flex justify-between items-center text-xs text-obsidian-muted">
-              <span className="truncate max-w-xs">{selectedCitation.source_url_or_identifier}</span>
+              <span className="truncate max-w-xs font-mono">{selectedCitation.source_url_or_identifier}</span>
               <button
                 onClick={() => setSelectedCitation(null)}
-                className="px-4 py-1.5 rounded-xl bg-gold text-obsidian-bg font-semibold hover:bg-gold-hover transition-colors"
+                className="px-4 py-1.5 rounded-md bg-gold text-obsidian-bg font-semibold hover:bg-gold-hover transition-colors"
               >
                 Close
               </button>

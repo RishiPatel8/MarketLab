@@ -13,11 +13,11 @@ export const Navbar: React.FC<NavbarProps> = ({ onSearchClick, systemReady }) =>
       <div className="flex items-center gap-4 flex-1 max-w-md">
         <button
           onClick={onSearchClick}
-          className="w-full flex items-center gap-3 px-3.5 py-2 rounded-xl bg-obsidian-bg border border-obsidian-border text-xs text-obsidian-muted hover:border-obsidian-border-muted transition-colors text-left"
+          className="w-full flex items-center gap-3 px-3.5 py-2 rounded-md bg-obsidian-bg border border-obsidian-border text-xs text-obsidian-muted hover:border-obsidian-border-muted transition-colors text-left"
         >
           <Search className="w-4 h-4 text-obsidian-secondary" />
-          <span>Search symbol e.g. GREENPOWER, RELIANCE, TATAMOTORS...</span>
-          <kbd className="ml-auto px-1.5 py-0.5 rounded bg-obsidian-card border border-obsidian-border text-[10px] text-obsidian-secondary font-mono">
+          <span className="truncate">Search 20,000+ Indian stocks, ETFs, mutual funds (NSE & BSE)...</span>
+          <kbd className="ml-auto px-1.5 py-0.5 rounded bg-obsidian-card border border-obsidian-border text-[10px] text-obsidian-secondary font-mono shrink-0">
             ⌘K
           </kbd>
         </button>

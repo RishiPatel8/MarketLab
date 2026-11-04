@@ -173,3 +173,29 @@ def rerun_experiment(
         benchmark_symbol=existing.benchmark_symbol
     )
     return create_experiment(create_req, db, user)
+
+@router.delete("/{experiment_id}", status_code=status.HTTP_200_OK)
+def delete_experiment(
+    experiment_id: str,
+    db: Session = Depends(get_sync_db),
+    user: dict = Depends(get_current_user_or_api_key)
+):
+    """Deletes a specific backtest experiment and its metrics."""
+    exp = db.query(ExperimentRun).filter(ExperimentRun.id == experiment_id).first()
+    if not exp:
+        raise HTTPException(status_code=404, detail=f"Experiment {experiment_id} not found")
+    db.query(ExperimentMetric).filter(ExperimentMetric.experiment_run_id == experiment_id).delete()
+    db.delete(exp)
+    db.commit()
+    return {"status": "success", "message": f"Experiment {experiment_id} deleted successfully"}
+
+@router.delete("", status_code=status.HTTP_200_OK)
+def clear_all_experiments(
+    db: Session = Depends(get_sync_db),
+    user: dict = Depends(get_current_user_or_api_key)
+):
+    """Clears all historical experiments and metrics."""
+    db.query(ExperimentMetric).delete()
+    count = db.query(ExperimentRun).delete()
+    db.commit()
+    return {"status": "success", "deleted_count": count, "message": "All experiments cleared successfully"}

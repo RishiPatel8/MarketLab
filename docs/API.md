@@ -19,10 +19,13 @@ Initiates an asynchronous research workflow.
 - **Request Body:**
   ```json
   {
-    "question": "Research Orient Green Power for a six-month horizon",
-    "symbol": "GREENPOWER",
+    "question": "I want to invest ₹50,000 in Reliance Industries for six months. Analyze the stock, run multiple strategies, simulate different scenarios, and tell me whether the current price is suitable for entering.",
+    "symbol": "RELIANCE",
     "exchange": "NSE",
     "horizon_days": 180,
+    "investment_amount_inr": 50000.0,
+    "horizon_category": "medium_term",
+    "risk_tolerance": "moderate",
     "include_technical": true,
     "include_fundamental": true,
     "include_rag": true
@@ -48,8 +51,8 @@ Retrieves the execution status, current progress step, and summary.
     "current_step": "report_generation",
     "progress_percentage": 100,
     "resolved_instrument": {
-      "symbol": "GREENPOWER",
-      "company_name": "Orient Green Power Company Limited",
+      "symbol": "RELIANCE",
+      "company_name": "Reliance Industries Limited",
       "exchange": "NSE"
     },
     "verification_status": "verified",
@@ -59,9 +62,9 @@ Retrieves the execution status, current progress step, and summary.
   ```
 
 ### `GET /api/v1/research/{run_id}/report`
-Retrieves the complete cited research report and quantitative findings.
+Retrieves the complete cited research report, decision intelligence, and quantitative findings.
 - **Response (200 OK):**
-  Returns structured report markdown, evidence cards, citations list, financial facts, and limitation notices.
+  Returns structured report markdown, decision rating (`BUY`, `HOLD`, `SELL`, `INSUFFICIENT_EVIDENCE`), potential entry range (`entry_price_min`, `entry_price_max`), DCF intrinsic fair value range, stop-loss price, probabilistic price target scenarios (`BULL`, `BASE`, `BEAR`), 10-model strategy consensus signals, evidence citations, and SEBI compliance notice.
 
 ### `GET /api/v1/research`
 Lists historical research runs with pagination and filtering.
@@ -113,7 +116,105 @@ Creates a new versioned experiment run using the stored configuration.
 
 ---
 
-## 4. Document Ingestion & RAG
+## 4. Strategies & Ensemble Consensus
+
+### `GET /api/v1/strategies`
+Lists all 10 registered quantitative strategy definitions, default parameters, and supported timeframes.
+
+### `POST /api/v1/strategies/run`
+Executes a single quantitative strategy backtest with custom parameters.
+- **Request Body:**
+  ```json
+  {
+    "symbol": "RELIANCE",
+    "exchange": "NSE",
+    "strategy_key": "sma_crossover",
+    "parameters": { "fast_period": 20, "slow_period": 50 },
+    "initial_capital": 100000.0,
+    "fee_pct": 0.001,
+    "slippage_pct": 0.0005,
+    "benchmark_symbol": "^NSEI"
+  }
+  ```
+- **Response (200 OK):**
+  Returns performance metrics (CAGR, Sharpe, Max Drawdown, Win Rate), equity curves, trade logs, and out-of-sample metrics.
+
+### `POST /api/v1/strategies/consensus`
+Executes all 10 quantitative models in parallel and synthesizes an ensemble consensus vote.
+- **Request Body:**
+  ```json
+  {
+    "symbol": "RELIANCE",
+    "exchange": "NSE",
+    "initial_capital": 50000.0
+  }
+  ```
+- **Response (200 OK):**
+  ```json
+  {
+    "total_strategies": 10,
+    "buy_signals": 7,
+    "hold_signals": 2,
+    "sell_signals": 1,
+    "consensus_rating": "BUY",
+    "consensus_percentage": 70.0,
+    "signals": [
+      {
+        "strategy_key": "sma_crossover",
+        "name": "SMA Crossover",
+        "category": "Trend Following",
+        "signal": "BUY",
+        "signal_strength": 0.85,
+        "cagr": 14.2,
+        "sharpe_ratio": 1.12,
+        "max_drawdown": 8.5,
+        "win_rate": 62.5,
+        "summary": "Fast 20-day SMA is above 50-day SMA."
+      }
+    ]
+  }
+  ```
+
+---
+
+## 5. Virtual Investment & Paper Trading Environment
+
+### `POST /api/v1/portfolios`
+Creates a new virtual investment portfolio.
+- **Request Body:**
+  ```json
+  {
+    "name": "Reliance 6M Simulation",
+    "initial_capital": 50000.0,
+    "currency": "INR",
+    "portfolio_type": "paper_trading"
+  }
+  ```
+
+### `GET /api/v1/portfolios`
+Lists all virtual investment portfolios for the user.
+
+### `GET /api/v1/portfolios/{portfolio_id}`
+Retrieves a portfolio with real-time mark-to-market valuations, cash balance, positions, and unrealized/realized P&L.
+
+### `POST /api/v1/portfolios/{portfolio_id}/orders`
+Submits and executes a virtual paper trading order (BUY/SELL) at market or limit prices with simulated 0.1% STT/brokerage fees and 0.05% slippage. Prevents cash overdrafts.
+
+### `POST /api/v1/portfolios/{portfolio_id}/scenarios`
+Simulates a What-If market shock scenario across active positions without executing real market transactions.
+- **Request Body:**
+  ```json
+  {
+    "scenario_type": "market_correction",
+    "shock_pct": -10.0
+  }
+  ```
+- **Response (200 OK):**
+  Returns baseline portfolio value, simulated shocked value, estimated loss, and simulated P&L %.
+
+---
+
+## 6. Document Ingestion & RAG
 
 ### `POST /api/v1/documents/ingest`
 Ingests an approved regulatory filing, quarterly statement, or announcement.
@@ -122,7 +223,7 @@ Ingests an approved regulatory filing, quarterly statement, or announcement.
 
 ---
 
-## 5. Automation & Internal Webhooks
+## 7. Automation & Internal Webhooks
 
 ### `POST /api/v1/internal/ingestion-jobs`
 Triggered by n8n or scheduled cron jobs to update daily market bars and filing indexes. Protected by `X-Internal-Token`.

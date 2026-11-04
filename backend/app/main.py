@@ -6,7 +6,7 @@ from contextlib import asynccontextmanager
 from app.core.config import settings
 from app.core.logging import setup_logging, logger
 from app.core.exceptions import MarketLabException
-from app.db.session import sync_engine, Base, SyncSessionLocal
+from app.db.session import sync_engine, Base, SyncSessionLocal, ensure_schema_migrations
 import app.db.models
 from app.services.instrument_service import InstrumentService
 from app.services.rag_service import RAGService
@@ -18,6 +18,7 @@ async def lifespan(app: FastAPI):
     logger.info("Initializing MarketLab AI backend...")
     # Initialize DB tables
     Base.metadata.create_all(bind=sync_engine)
+    ensure_schema_migrations(sync_engine)
     # Seed default instruments and regulatory filings
     with SyncSessionLocal() as db:
         InstrumentService(db)

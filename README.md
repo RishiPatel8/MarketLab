@@ -1,8 +1,8 @@
 # MarketLab AI
 
-> **AI-Powered Stock Research and Quantitative Strategy Validation Platform for Indian Equities**
+> **Agentic Stock Research, Quantitative Strategy Validation, and Virtual Investment Simulation Platform for Indian Equities**
 
-[![Tests](https://img.shields.io/badge/tests-20%20passed-success)](scripts/run_tests.py)
+[![Tests](https://img.shields.io/badge/tests-73%20passed-success)](scripts/run_tests.py)
 [![Architecture](https://img.shields.io/badge/orchestrator-LangGraph-gold)](docs/ARCHITECTURE.md)
 [![Database](https://img.shields.io/badge/storage-PostgreSQL%20%2B%20pgvector-blue)](docs/DATA_SOURCES.md)
 [![Design](https://img.shields.io/badge/theme-Obsidian%20Gold-amber)](frontend/tailwind.config.js)
@@ -12,14 +12,19 @@
 
 ## 1. Executive Summary
 
-MarketLab AI is an agentic stock research and strategy backtesting platform tailored for publicly listed Indian equities (NSE & BSE).
+MarketLab AI transforms traditional equity analysis into a comprehensive **Agentic Stock Research, Quantitative Strategy Validation, and Virtual Investment Simulation Platform** specifically engineered for Indian capital markets (NSE & BSE).
 
-Instead of relying on a generic chatbot to guess calculations or make unsupported predictions, MarketLab AI enforces a strict boundary between probabilistic LLM agent orchestration and deterministic quantitative execution:
-1. **Instrument Resolution**: Resolves natural language queries (e.g., *"Research Orient Green Power for a six-month horizon"*) to authoritative identifiers (`NSE:GREENPOWER`), detecting ambiguity (e.g. distinguishing Tata Motors, Tata Steel, and Tata Power).
-2. **Deterministic Math**: Metrics (Moving Averages, RSI, MACD, Volatility, Sharpe, Drawdown) and backtest mechanics (next-bar open execution, slippage, STT/brokerage fees) are executed strictly in verified Python code.
-3. **Traceable Citations**: Qualitative assertions link directly to audited regulatory filings, annual reports, and corporate announcements stored in pgvector with SHA-256 content hashes.
-4. **Adversarial Verification**: A Critic / Verification Agent audits evidence coverage, data freshness, and look-ahead bias before finalizing reports.
-5. **Obsidian Gold SaaS Identity**: Clean, dark premium interface (`#09090B` background, `#D4AF37` gold accents) with tabular financial figures and responsive charts.
+The platform supports both **short-term trading research** and **long-term investment research** through natural-language directives such as:
+
+> *"I want to invest ₹50,000 in Reliance Industries for six months. Analyze the stock, run multiple strategies, simulate different scenarios, and tell me whether the current price is suitable for entering."*
+
+### Core Architectural Guarantees:
+1. **Instrument Resolution**: Resolves natural language queries to authoritative NSE/BSE tickers, ISINs, and AMFI mutual funds across 20,000+ instruments with smart ambiguity detection.
+2. **Deterministic Financial Math**: Technical indicators (SMA, EMA, RSI, MACD, Bollinger Bands, ATR, ADX, VWAP, Pivots), DCF intrinsic valuation models, DuPont 3-stage ROE breakdowns, and backtests are executed strictly in verified Python code. LLMs never compute or fabricate financial numbers.
+3. **10-Model Quantitative Strategy Ensemble**: Evaluates independently configurable strategies across trend-following, momentum, mean reversion, breakout, and fundamental value, synthesizing an ensemble consensus vote (BUY/HOLD/SELL/INSUFFICIENT EVIDENCE).
+4. **Virtual Investment Environment**: Risk-free paper trading portfolios with real-time mark-to-market position tracking, realistic STT/brokerage fees, slippage, and What-If market stress tests (e.g. -15% correction, +20% rally).
+5. **Traceable Citations & Critic Gate**: Qualitative assertions link directly to audited regulatory filings, annual reports, and corporate announcements stored in pgvector. An adversarial Critic Agent verifies factual consistency and flags look-ahead bias.
+6. **Obsidian Gold SaaS Identity**: Institutional dark theme (`#09090B` background, `#D4AF37` gold accents, `#303036` borders) with tabular figures, responsive equity charts, and SEBI statutory disclosures.
 
 ---
 
@@ -104,12 +109,12 @@ MarketLab/
 
 ---
 
-## 4. Quickstart Guide
+## 4. Quickstart Guide (Windows PowerShell & Linux)
 
 ### Prerequisites
-- Python 3.10+ (tested on Python 3.14)
+- Python 3.10+ (tested on Python 3.14 x64 on Windows)
 - Node.js 18+ and npm
-- Docker and Docker Compose (for containerized deployment)
+- Docker and Docker Compose (optional for containerized deployment)
 
 ### 4.1 Running with Docker Compose
 To start the entire platform (PostgreSQL with pgvector, Redis, FastAPI Backend, Background Worker, React Frontend, and n8n):
@@ -118,65 +123,81 @@ To start the entire platform (PostgreSQL with pgvector, Redis, FastAPI Backend, 
 cp .env.example .env
 
 # 2. Launch all services
-docker-compose up --build
+docker compose up --build
 ```
 - **Web Application**: `http://localhost:3000`
 - **FastAPI Swagger Docs**: `http://localhost:8000/docs`
 - **n8n Automation Console**: `http://localhost:5678` (Credentials: `admin` / `marketlab_admin`)
 
-### 4.2 Running Locally for Development
+### 4.2 Running Locally on Windows PowerShell
 
-#### Backend
-```bash
-cd backend
-pip install -r requirements.txt
-python -m uvicorn app.main:app --reload --port 8000
+#### Step 1: Clone & Configure Environment
+```powershell
+# Copy the environment template
+Copy-Item .env.example .env
+
+# Edit .env with your provider choices:
+# For real historical daily data: MARKET_DATA_PROVIDER=yfinance
+# For offline unit tests: MARKET_DATA_PROVIDER=fixture, LLM_PROVIDER=mock, EMBEDDING_PROVIDER=mock
+# For live Gemini LLM: LLM_PROVIDER=gemini, GEMINI_API_KEY=AIzaSy...
 ```
 
-#### Frontend
-```bash
+#### Step 2: Install Backend Dependencies & Start Server
+```powershell
+# Install pinned dependencies
+python -m pip install -r backend/requirements.txt
+
+# Start FastAPI backend server (Runs on port 8000)
+cd backend
+python -m uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload
+```
+
+#### Step 3: Install Frontend Dependencies & Start Dev Server
+In a separate PowerShell window:
+```powershell
 cd frontend
 npm install
-npm run dev
+npm run dev -- --host 127.0.0.1 --port 5173
 ```
-Open `http://localhost:5173` in your browser.
+Access the application at `http://127.0.0.1:5173`.
 
 ---
 
 ## 5. Verification & Test Suite
 
-MarketLab AI includes a comprehensive test suite covering:
-1. **Deterministic Indicators**: SMA, RSI, MACD, and Annualized Volatility calculations.
-2. **Backtest Mechanics**: Moving average crossover execution, cash allocation, STT/brokerage fees, and execution slippage.
-3. **Look-Ahead Bias Prevention**: Verification that signals generated at bar $t$ execute strictly at bar $t+1$ Open.
-4. **Data Sanity & Anomaly Detection**: Rejecting negative prices, corrupted High/Low bounds, duplicate timestamps, and gaps.
-5. **RAG Citations & Prompt Injection Defense**: Quarantining untrusted document text and ensuring SHA-256 hash traceability.
-6. **AI Evaluation**: Ambiguous entity disambiguation (e.g. clarifying *"Tata"* into Tata Motors, Tata Steel, or Tata Power).
+MarketLab AI provides strict separation between **offline unit tests** (which mock external network boundaries) and **opt-in live integration tests** (which hit live Yahoo Finance and Google Gemini endpoints).
 
-To run the master test runner:
-```bash
+### 5.1 Running the Master Offline Test Suite
+Executes all 33 unit and evaluation tests plus full TypeScript compilation and Vite production bundle check:
+```powershell
 python scripts/run_tests.py
 ```
-Output:
-```
-============================================================
-1. Running Backend Unit, Integration & AI Evaluation Tests...
-============================================================
-collected 20 items: 20 passed in 1.15s
-[OK] Backend tests passed successfully!
 
-============================================================
-2. Verifying Frontend TypeScript Compilation and Production Bundle...
-============================================================
-✓ 1591 modules transformed.
-dist/index.html                   1.22 kB
-dist/assets/index-DX4iJ6rx.css   23.10 kB
-dist/assets/index-BdeXRbbE.js   234.63 kB
-[OK] Frontend build passed successfully!
+### 5.2 Running Opt-In Live Integration Tests
+Gated by `$env:RUN_LIVE_INTEGRATION_TESTS="true"`. Requires an active internet connection:
+```powershell
+# Enable the live integration test gate in PowerShell
+$env:RUN_LIVE_INTEGRATION_TESTS="true"
 
-============================================================
-[SUCCESS] ALL TEST SUITES PASSED! MarketLab AI IS 100% OPERATIONAL.
+# Test live market data retrieval (Yahoo Finance - GREENPOWER.NS)
+python -m pytest backend/tests/test_live_integration_gated.py -k "test_live_market_data" -v
+
+# Test live Gemini LLM & Embeddings (Requires GEMINI_API_KEY in environment)
+$env:GEMINI_API_KEY="AIzaSyYourActualKey"
+python -m pytest backend/tests/test_live_integration_gated.py -v
 ```
+
+---
+
+## 6. Troubleshooting & Provider Error Guide
+
+| Symptom / Error | Root Cause | Solution |
+|---|---|---|
+| `ConfigurationError: GEMINI_API_KEY is not configured` | Live mode (`LLM_PROVIDER=gemini` or `EMBEDDING_PROVIDER=gemini`) is active without an API key. Silent mock fallback is forbidden in live mode. | Add `GEMINI_API_KEY=AIzaSy...` to `.env` or switch to offline mode: `LLM_PROVIDER=mock` and `EMBEDDING_PROVIDER=mock`. |
+| `MarketDataProviderError: No historical market data returned` | Ticker not recognized or Yahoo Finance rate limit/timeout. | Verify instrument symbol mapping. `yfinance` employs bounded retries with exponential backoff (up to 3 attempts). |
+| `MarketDataProviderError: Direct NSE/BSE exchange API credentials not configured` | Direct exchange adapter (`MARKET_DATA_PROVIDER=nse_bse`) selected without authorized exchange credentials. | Set `MARKET_DATA_PROVIDER=yfinance` for daily historical bars or `fixture` for offline testing. |
+| Mixed vector collection warning in UI | Some document chunks have mock embeddings while others have Gemini embeddings. | Go to **Settings** page and click **"Rebuild Vector Index"** or send `POST /api/v1/system/reindex` to re-embed all chunks uniformly. |
+| AppLocker / PowerShell script execution policy error | Local virtualenv binaries blocked by Windows Application Control. | Run packages via system python: `python -m pip install ...` and `python -m pytest ...`. |
 
 ---
 

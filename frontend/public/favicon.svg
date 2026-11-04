@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
+  <rect width="32" height="32" rx="6" fill="#090604"/>
+  <rect x="0.5" y="0.5" width="31" height="31" rx="5.5" stroke="#403B36"/>
+  <!-- Geometric Copper Research Terminal Glyph -->
+  <path d="M7 23L13 14L18 19L25 9" stroke="#C47742" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="25" cy="9" r="2" fill="#E6A776"/>
+  <path d="M7 25H25" stroke="#77716A" stroke-width="1.5" stroke-linecap="round"/>
+</svg>

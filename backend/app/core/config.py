@@ -4,9 +4,13 @@ from pydantic import AnyHttpUrl, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
+ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
+ENV_FILE_PATH = os.path.join(ROOT_DIR, ".env")
+
+
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
-        env_file=".env",
+        env_file=[".env", "../.env", ENV_FILE_PATH],
         env_file_encoding="utf-8",
         extra="ignore"
     )
@@ -37,19 +41,24 @@ class Settings(BaseSettings):
     REDIS_URL: str = "redis://localhost:6379/0"
 
     # LLM Providers
-    LLM_PROVIDER: str = "mock"  # mock, openai, gemini
+    LLM_PROVIDER: str = "groq"  # mock, openai, gemini, groq
     OPENAI_API_KEY: Optional[str] = None
     OPENAI_MODEL: str = "gpt-4o-mini"
     GEMINI_API_KEY: Optional[str] = None
-    GEMINI_MODEL: str = "gemini-2.5-flash"
+    GEMINI_MODEL: str = "gemini-3.5-flash-lite"
+    GROQ_API_KEY: Optional[str] = None
+    GROQ_MODEL: str = "qwen/qwen3.8-27b"
 
     # Embeddings
     EMBEDDING_PROVIDER: str = "mock"  # mock, openai, gemini
-    EMBEDDING_MODEL: str = "text-embedding-3-small"
-    EMBEDDING_DIM: int = 1536
+    EMBEDDING_MODEL: str = "gemini-embedding-2"
+    EMBEDDING_DIM: int = 3072
 
     # Market Data
-    MARKET_DATA_PROVIDER: str = "fixture"  # fixture, nse_bse
+    MARKET_DATA_PROVIDER: str = "fixture"  # fixture, yfinance, nse_bse
+
+    # Live Integration Test Flag
+    RUN_LIVE_INTEGRATION_TESTS: bool = False
 
     # Security & Internal Tokens
     API_KEY_ENABLED: bool = False

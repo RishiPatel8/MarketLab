@@ -34,7 +34,8 @@ def rag_node(state: ResearchWorkflowState) -> Dict[str, Any]:
             "publication_date": item.publication_date.isoformat() if item.publication_date else None,
             "content": sanitized_content,
             "relevance_score": item.relevance_score,
-            "content_hash": item.content_hash
+            "content_hash": item.content_hash,
+            "is_mock_embedding": item.is_mock_embedding
         })
 
     return {

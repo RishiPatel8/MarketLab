@@ -17,6 +17,9 @@ class ResearchRun(Base):
     resolved_instrument_id = Column(String(36), ForeignKey("instruments.id"), nullable=True, index=True)
     retry_count = Column(Integer, default=0)
     verification_status = Column(String(50), default="pending")  # verified, flagged, insufficient_evidence
+    investment_amount_inr = Column(Float, nullable=True, default=50000.0)
+    horizon_category = Column(String(50), default="medium_term")  # short_term, medium_term, long_term
+    risk_tolerance = Column(String(50), default="moderate")  # conservative, moderate, aggressive
     error_message = Column(Text, nullable=True)
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc), index=True)
     completed_at = Column(DateTime, nullable=True)

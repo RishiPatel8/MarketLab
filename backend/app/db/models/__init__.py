@@ -3,10 +3,14 @@ from app.db.models.user import User
 from app.db.models.instrument import Instrument
 from app.db.models.market_bar import MarketBar
 from app.db.models.financial_fact import FinancialFact
+from app.db.models.fundamental_snapshot import FundamentalSnapshot
 from app.db.models.document import Document, DocumentChunk
 from app.db.models.research_run import ResearchRun, ResearchSource
 from app.db.models.experiment_run import ExperimentRun, ExperimentMetric
 from app.db.models.report import Report, AutomationEvent
+from app.db.models.strategy import StrategyDefinition
+from app.db.models.virtual_portfolio import VirtualPortfolio, VirtualPosition, VirtualOrder
+from app.db.models.scenario import ScenarioSimulation
 
 __all__ = [
     "Base",
@@ -14,6 +18,7 @@ __all__ = [
     "Instrument",
     "MarketBar",
     "FinancialFact",
+    "FundamentalSnapshot",
     "Document",
     "DocumentChunk",
     "ResearchRun",
@@ -22,4 +27,9 @@ __all__ = [
     "ExperimentMetric",
     "Report",
     "AutomationEvent",
+    "StrategyDefinition",
+    "VirtualPortfolio",
+    "VirtualPosition",
+    "VirtualOrder",
+    "ScenarioSimulation",
 ]

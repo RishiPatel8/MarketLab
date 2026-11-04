@@ -38,11 +38,13 @@ SEED_FACTS = {
     }
 }
 
+from app.analytics.fundamental_engine import FundamentalEngine
+
 def financial_research_node(state: ResearchWorkflowState) -> Dict[str, Any]:
     """
     Financial Research Node:
     Extracts authoritative balance sheet and income statement metrics.
-    Distinguishes reported facts from generated interpretations.
+    Executes deterministic DCF valuation, DuPont analysis, and financial ratio scoring.
     """
     resolved = state.get("resolved_instrument")
     if not resolved:
@@ -70,7 +72,15 @@ def financial_research_node(state: ResearchWorkflowState) -> Dict[str, Any]:
             "source": "Regulatory Disclosures FY2024"
         }
 
+    # Execute deterministic fundamental analysis
+    fund_analysis = FundamentalEngine.analyze_fundamentals(
+        raw_data=facts,
+        symbol=symbol,
+        company_name=resolved.get("company_name", symbol)
+    )
+
     return {
         "financial_facts": facts,
+        "fundamental_analysis": fund_analysis.model_dump() if hasattr(fund_analysis, "model_dump") else fund_analysis.dict(),
         "current_step": "rag_evidence_retrieval"
     }

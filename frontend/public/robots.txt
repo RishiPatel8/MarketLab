@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /settings
+Disallow: /experiments
+
+Sitemap: https://marketlab.ai/sitemap.xml

@@ -8,39 +8,58 @@ export default {
     extend: {
       colors: {
         obsidian: {
-          bg: "#09090B",
-          surface: "#111114",
-          card: "#18181B",
-          elevated: "#202024",
-          hover: "#27272A",
-          border: "#27272A",
-          "border-muted": "#3F3F46",
-          text: "#FAFAF9",
-          secondary: "#A1A1AA",
-          muted: "#71717A",
+          bg: "#090604",            // Deep Black
+          surface: "#130A06",       // Dark Brown
+          card: "#1D0D06",          // Brown Black
+          elevated: "#292725",      // Elevated Dark Charcoal
+          hover: "#2C2928",         // Dark Charcoal
+          border: "#403B36",        // Border
+          "border-muted": "#512B19",// Deep Copper Muted Border
+          pure: "#020101",          // Pure Black
+          text: "#F5F2ED",          // Warm White
+          soft: "#E8E1DA",          // Soft White
+          secondary: "#A39A92",     // Secondary Grey
+          muted: "#77716A",         // Muted Grey
         },
         gold: {
-          DEFAULT: "#D4AF37",
-          hover: "#E9CD70",
-          dim: "#8C7323",
-          light: "#F5E7B2",
-          dark: "#3B300A"
+          DEFAULT: "#C47742",       // Primary Copper
+          hover: "#D99560",         // Copper Hover / Light Copper
+          strong: "#833512",        // Burnt Orange
+          dim: "#5B2108",           // Copper Brown
+          light: "#E6A776",         // Copper Highlight
+          metallic: "#D28B55",      // Metallic Copper
+          soft: "#D0A38F",          // Copper Light
+          dark: "#512B19"           // Deep Copper
+        },
+        copper: {
+          DEFAULT: "#C47742",       // Primary Copper
+          hover: "#D99560",         // Light Copper
+          strong: "#833512",        // Burnt Orange
+          dim: "#5B2108",           // Copper Brown
+          light: "#E6A776",         // Copper Highlight
+          metallic: "#D28B55",      // Metallic Copper
+          soft: "#D0A38F",          // Copper Light
+          dark: "#512B19"           // Deep Copper
         },
         market: {
-          positive: "#22C55E",
-          negative: "#F87171",
-          warning: "#FBBF24",
-          info: "#60A5FA",
-          benchmark: "#3B82F6",
-          secondary: "#A855F7"
+          positive: "#22C55E",      // Profit (Green)
+          negative: "#EF4444",      // Loss (Red)
+          warning: "#F59E0B",       // Hold / Warning (Amber)
+          info: "#60A5FA",          // Information (Blue)
+          benchmark: "#38BDF8"      // Benchmark (Sky Blue)
         }
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+        mono: ['JetBrains Mono', 'Fira Code', 'monospace']
       },
       borderRadius: {
-        'card': '16px',
-        'card-lg': '20px'
+        'button': '8px',
+        'button-sm': '6px',
+        'card': '10px',
+        'card-lg': '12px',
+        'xl': '8px',
+        '2xl': '10px',
       }
     },
   },

@@ -22,10 +22,14 @@ export const EquityChart: React.FC<EquityChartProps> = ({
     );
   }
 
-  const values = data.map((d) => d.portfolio_value);
-  const minVal = Math.min(...values);
-  const maxVal = Math.max(...values);
-  const range = maxVal - minVal || 1;
+  const getVal = (d: any) => Number(d?.portfolio_value ?? d?.equity ?? initialCapital);
+  const getDate = (d: any) => String(d?.date ?? d?.timestamp ?? '').slice(0, 10);
+  const getClose = (d: any) => Number(d?.close_price ?? d?.close ?? 0);
+
+  const values = data.map(getVal);
+  const minVal = values.length > 0 ? Math.min(...values) : 0;
+  const maxVal = values.length > 0 ? Math.max(...values) : 100;
+  const range = (maxVal - minVal) || 1;
 
   const width = 800;
   const height = 240;
@@ -34,9 +38,10 @@ export const EquityChart: React.FC<EquityChartProps> = ({
   // Generate SVG points for strategy equity curve (Gold)
   const points = data
     .map((d, i) => {
-      const x = padding + (i / (data.length - 1)) * (width - 2 * padding);
-      const y = height - padding - ((d.portfolio_value - minVal) / range) * (height - 2 * padding);
-      return `${x},${y}`;
+      const x = padding + (i / Math.max(1, data.length - 1)) * (width - 2 * padding);
+      const val = getVal(d);
+      const y = height - padding - ((val - minVal) / range) * (height - 2 * padding);
+      return `${x},${isNaN(y) ? height - padding : y}`;
     })
     .join(' ');
 
@@ -66,12 +71,12 @@ export const EquityChart: React.FC<EquityChartProps> = ({
 
         {currentHover && (
           <div className="flex items-center gap-3 tabular-nums font-mono">
-            <span className="text-obsidian-muted">{currentHover.date}</span>
+            <span className="text-obsidian-muted">{getDate(currentHover)}</span>
             <span className="text-gold font-bold">
-              INR {currentHover.portfolio_value.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+              INR {getVal(currentHover).toLocaleString(undefined, { minimumFractionDigits: 2 })}
             </span>
             <span className="text-obsidian-secondary text-[11px]">
-              (Close: ₹{currentHover.close_price.toFixed(2)})
+              (Close: ₹{getClose(currentHover).toFixed(2)})
             </span>
           </div>
         )}
@@ -86,21 +91,27 @@ export const EquityChart: React.FC<EquityChartProps> = ({
         >
           <defs>
             <linearGradient id="goldGradient" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#D4AF37" stopOpacity="0.25" />
-              <stop offset="100%" stopColor="#D4AF37" stopOpacity="0.0" />
+              <stop offset="0%" stopColor="#E6A776" stopOpacity="0.35" />
+              <stop offset="35%" stopColor="#D28B55" stopOpacity="0.18" />
+              <stop offset="100%" stopColor="#C47742" stopOpacity="0.0" />
+            </linearGradient>
+            <linearGradient id="copperLineGradient" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stopColor="#C47742" />
+              <stop offset="50%" stopColor="#F0B888" />
+              <stop offset="100%" stopColor="#D28B55" />
             </linearGradient>
           </defs>
 
           {/* Grid lines */}
-          <line x1={padding} y1={padding} x2={width - padding} y2={padding} stroke="#27272A" strokeDasharray="3 3" />
-          <line x1={padding} y1={height / 2} x2={width - padding} y2={height / 2} stroke="#27272A" strokeDasharray="3 3" />
-          <line x1={padding} y1={height - padding} x2={width - padding} y2={height - padding} stroke="#27272A" />
+          <line x1={padding} y1={padding} x2={width - padding} y2={padding} stroke="#403B36" strokeDasharray="3 3" />
+          <line x1={padding} y1={height / 2} x2={width - padding} y2={height / 2} stroke="#403B36" strokeDasharray="3 3" />
+          <line x1={padding} y1={height - padding} x2={width - padding} y2={height - padding} stroke="#403B36" />
 
           {/* Area fill */}
           <polygon points={areaPoints} fill="url(#goldGradient)" />
 
-          {/* Gold Strategy Line */}
-          <polyline fill="none" stroke="#D4AF37" strokeWidth="2.2" points={points} strokeLinecap="round" strokeLinejoin="round" />
+          {/* Primary Glossy Copper Strategy Line */}
+          <polyline fill="none" stroke="url(#copperLineGradient)" strokeWidth="2.5" points={points} strokeLinecap="round" strokeLinejoin="round" />
 
           {/* Interactive hover line */}
           {hoverIndex !== null && (
@@ -109,7 +120,7 @@ export const EquityChart: React.FC<EquityChartProps> = ({
               y1={padding}
               x2={padding + (hoverIndex / (data.length - 1)) * (width - 2 * padding)}
               y2={height - padding}
-              stroke="#D4AF37"
+              stroke="#C47742"
               strokeDasharray="2 2"
               strokeWidth="1.5"
             />

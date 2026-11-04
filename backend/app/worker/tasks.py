@@ -1,4 +1,5 @@
 import logging
+import json
 from datetime import datetime, timezone
 from app.db.session import SyncSessionLocal
 from app.db.models.research_run import ResearchRun
@@ -25,20 +26,31 @@ def execute_research_workflow(run_id: str):
         db.commit()
 
         question = run_obj.research_question
+        inv_amt = getattr(run_obj, "investment_amount_inr", 50000.0) or 50000.0
+        h_cat = getattr(run_obj, "horizon_category", "medium_term") or "medium_term"
+        r_tol = getattr(run_obj, "risk_tolerance", "moderate") or "moderate"
 
     initial_state: ResearchWorkflowState = {
         "run_id": run_id,
         "user_id": None,
         "original_question": question,
+        "investment_amount_inr": inv_amt,
+        "horizon_days": 180,
+        "horizon_category": h_cat,
+        "risk_tolerance": r_tol,
         "instrument_candidates": [],
         "resolved_instrument": None,
         "research_spec": None,
         "market_data_reference": None,
         "data_validation": None,
         "financial_facts": None,
+        "fundamental_analysis": None,
         "retrieved_evidence": [],
         "quantitative_results": None,
+        "technical_analysis": None,
+        "strategy_consensus": None,
         "verification_findings": None,
+        "decision_result": None,
         "retry_count": 0,
         "run_status": "running",
         "current_step": "planner",
@@ -57,9 +69,17 @@ def execute_research_workflow(run_id: str):
                 run_obj.current_step = final_state.get("current_step", "completed")
                 run_obj.progress_percentage = 100 if run_obj.status in ("completed", "completed_with_limitations") else 50
                 run_obj.error_message = final_state.get("error_message")
+                candidates = final_state.get("instrument_candidates") or []
+                if candidates:
+                    run_obj.structured_specification = json.dumps({"clarification_candidates": candidates})
                 resolved = final_state.get("resolved_instrument")
                 if resolved and "id" in resolved:
                     run_obj.resolved_instrument_id = resolved["id"]
+                ver_findings = final_state.get("verification_findings") or {}
+                if ver_findings.get("verification_passed", False) or run_obj.status == "completed":
+                    run_obj.verification_status = "verified"
+                elif run_obj.status == "completed_with_limitations":
+                    run_obj.verification_status = "flagged"
                 db.commit()
 
     except Exception as e:

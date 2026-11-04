@@ -1,0 +1,40 @@
+SCRIP_CODE,SCRIP_ID,COMPANY_NAME,STATUS,GROUP,FACE_VALUE,ISIN_NUMBER,INDUSTRY,INSTRUMENT_TYPE,IS_BSE_EXCLUSIVE
+500325,RELIANCE,Reliance Industries Ltd.,Active,A,10.0,INE002A01018,Oil & Gas,EQUITY,False
+532540,TCS,Tata Consultancy Services Ltd.,Active,A,1.0,INE467B01029,IT Services,EQUITY,False
+500209,INFY,Infosys Ltd.,Active,A,5.0,INE009A01021,IT Services,EQUITY,False
+500180,HDFCBANK,HDFC Bank Ltd.,Active,A,1.0,INE040A01034,Banking,EQUITY,False
+532174,ICICIBANK,ICICI Bank Ltd.,Active,A,2.0,INE090A01021,Banking,EQUITY,False
+500570,TATAMOTORS,Tata Motors Ltd.,Active,A,2.0,INE155A01022,Automobiles,EQUITY,False
+500875,ITC,ITC Ltd.,Active,A,1.0,INE154A01025,FMCG & Tobacco,EQUITY,False
+500510,LT,Larsen & Toubro Ltd.,Active,A,2.0,INE018A01030,Engineering & Infra,EQUITY,False
+500112,SBIN,State Bank of India,Active,A,1.0,INE062A01020,Public Sector Banking,EQUITY,False
+533263,GREENPOWER,Orient Green Power Company Ltd.,Active,B,10.0,INE999K01014,Renewable Energy,EQUITY,False
+500114,TITAN,Titan Company Ltd.,Active,A,1.0,INE280A01028,Consumer Durables,EQUITY,False
+532454,BHARTIARTL,Bharti Airtel Ltd.,Active,A,5.0,INE397D01024,Telecom,EQUITY,False
+500247,KOTAKBANK,Kotak Mahindra Bank Ltd.,Active,A,5.0,INE237A01028,Banking,EQUITY,False
+500820,ASIANPAINT,Asian Paints Ltd.,Active,A,1.0,INE021A01026,Paints & Chemicals,EQUITY,False
+532500,MARUTI,Maruti Suzuki India Ltd.,Active,A,5.0,INE585B01010,Automobiles,EQUITY,False
+500696,HINDUNILVR,Hindustan Unilever Ltd.,Active,A,1.0,INE030A01027,FMCG,EQUITY,False
+500010,HDFC,Housing Development Finance Corp,Active,A,2.0,INE001A01036,Housing Finance,EQUITY,False
+500470,TATASTEEL,Tata Steel Ltd.,Active,A,1.0,INE081A01020,Metals & Mining,EQUITY,False
+500400,TATAPOWER,Tata Power Co. Ltd.,Active,A,1.0,INE245A01021,Electric Utilities,EQUITY,False
+532215,TOTAL,Total Transport Systems Ltd (BSE Exclusive),Active,B,10.0,INE384B01014,Logistics & Freight,EQUITY,True
+500144,FINCABLES,Finolex Cables Ltd (BSE Mainboard),Active,A,2.0,INE235A01022,Electrical Equipment,EQUITY,True
+500020,BOMDYEING,Bombay Dyeing & Mfg Co Ltd,Active,B,2.0,INE032A01023,Textiles,EQUITY,True
+500009,STANDARD,Standard Industries Ltd,Active,B,5.0,INE244A01016,Property & Real Estate,EQUITY,True
+500003,AEGISLOG,Aegis Logistics Ltd,Active,A,1.0,INE208A01025,Chemicals & LPG Logistics,EQUITY,True
+524102,KABRAEXTRU,Kabra Extrusiontechnik Ltd,Active,B,5.0,INE900B01029,Industrial Machinery,EQUITY,True
+500407,SWARAJENG,Swaraj Engines Ltd,Active,A,10.0,INE277A01016,Diesel Engines,EQUITY,True
+521070,ALOKINDS,Alok Industries Ltd,Active,B,1.0,INE270A01029,Textiles & Polyester,EQUITY,True
+533326,TEXRAIL,Texmaco Rail & Engineering Ltd,Active,B,1.0,INE621L01012,Railways Infra,EQUITY,True
+502219,HINDNATGLS,Hindusthan National Glass & Ind,Active,B,2.0,INE952A01022,Container Glass,EQUITY,True
+517477,ELNET,Elnet Technologies Ltd,Active,B,10.0,INE033C01019,Software Technology Parks,EQUITY,True
+523618,DREDGECORP,Dredging Corp of India,Active,B,10.0,INE506A01018,Marine Infrastructure,EQUITY,True
+542923,KONTOR,Kontor Space Ltd (BSE SME),Active,M,10.0,INE06R401014,Co-working & Real Estate,SME_EQUITY,True
+543248,VILAS,Vilas Transcore Ltd (BSE SME),Active,M,10.0,INE0COY01017,Power Transformer Cores,SME_EQUITY,True
+543324,DUCOL,Ducol Organics & Colours Ltd (BSE SME),Active,M,10.0,INE004N01012,Dyes & Pigments,SME_EQUITY,True
+543532,BEWCL,BEW Engineering Ltd (BSE SME),Active,M,10.0,INE0FST01019,Pharmaceutical Equipment,SME_EQUITY,True
+543533,EMERALD,Emerald Tyre Manufacturers (BSE SME),Active,M,10.0,INE0H6G01017,Industrial Tyres,SME_EQUITY,True
+590101,NETFNIFTY,Nippon India ETF Nifty 50 (BSE Listing),Active,E,1.0,INF204KB14I2,Exchange Traded Fund,ETF,False
+590098,NETFGILT5Y,Nippon India ETF Nifty 5yr Benchmark G-Sec,Active,E,10.0,INF204KA1U89,Debt Government Securities,ETF,True
+590103,NETFCONSUM,Nippon India ETF Nifty Consumption,Active,E,1.0,INF204KB1101,Equity Sectoral Consumption,ETF,True

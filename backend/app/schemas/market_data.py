@@ -22,7 +22,10 @@ class MarketDataValidationResult(BaseModel):
     issues: List[str] = []
     coverage_percentage: float = 100.0
     provider_attribution: str = "fixture"
-    latency_type: str = "end_of_day"
+    latency_type: str = "daily_historical"
+    data_frequency: str = "daily_historical"
+    latest_observation_time: Optional[datetime] = None
+    retrieval_timestamp: Optional[datetime] = None
 
 class MarketDataResponse(BaseModel):
     instrument_id: str

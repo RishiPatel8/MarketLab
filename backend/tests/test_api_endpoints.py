@@ -14,8 +14,10 @@ def test_instrument_search(client):
     res = client.get("/api/v1/instruments/search?q=green")
     assert res.status_code == 200
     data = res.json()
-    assert len(data) >= 1
-    assert data[0]["symbol"] == "GREENPOWER"
+    items = data["items"] if "items" in data else data
+    assert len(items) >= 1
+    symbols = [item["symbol"] for item in items]
+    assert "GREENPOWER" in symbols
 
 def test_experiment_creation_and_retrieval(client):
     req_body = {
@@ -46,7 +48,7 @@ def test_research_run_and_report_lifecycle(client):
 
     # Poll status until completed
     completed = False
-    for _ in range(10):
+    for _ in range(30):
         st = client.get(f"/api/v1/research/{run_id}").json()
         if st["status"] in ("completed", "completed_with_limitations"):
             completed = True

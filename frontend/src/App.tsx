@@ -4,10 +4,14 @@ import { Navbar } from './components/Navbar';
 import { OverviewPage } from './pages/OverviewPage';
 import { StockResearchPage } from './pages/StockResearchPage';
 import { StrategyLabPage } from './pages/StrategyLabPage';
+import { VirtualPortfolioPage } from './pages/VirtualPortfolioPage';
 import { CompareStocksPage } from './pages/CompareStocksPage';
 import { ResearchLibraryPage } from './pages/ResearchLibraryPage';
 import { ExperimentHistoryPage } from './pages/ExperimentHistoryPage';
 import { SettingsPage } from './pages/SettingsPage';
+import { PrivacyPolicyPage } from './pages/PrivacyPolicyPage';
+import { TermsPage } from './pages/TermsPage';
+import { Footer } from './components/Footer';
 import { InstrumentSearchModal } from './components/InstrumentSearchModal';
 import { getHealth } from './services/api';
 
@@ -39,6 +43,7 @@ export const App: React.FC = () => {
       setResearchPromptHint(promptHint);
     }
     setActiveTab(tab);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleSelectInstrumentFromSearch = (symbol: string) => {
@@ -64,18 +69,26 @@ export const App: React.FC = () => {
         />
 
         {/* Scrollable Page Body */}
-        <main className="flex-1 overflow-y-auto p-8">
-          {activeTab === 'overview' && (
-            <OverviewPage onNavigate={handleNavigate} />
-          )}
-          {activeTab === 'research' && (
-            <StockResearchPage initialPrompt={researchPromptHint} />
-          )}
-          {activeTab === 'strategy' && <StrategyLabPage />}
-          {activeTab === 'compare' && <CompareStocksPage />}
-          {activeTab === 'library' && <ResearchLibraryPage />}
-          {activeTab === 'experiments' && <ExperimentHistoryPage />}
-          {activeTab === 'settings' && <SettingsPage />}
+        <main className="flex-1 overflow-y-auto p-6 md:p-8 flex flex-col justify-between">
+          <div className="flex-1">
+            {activeTab === 'overview' && (
+              <OverviewPage onNavigate={handleNavigate} />
+            )}
+            {activeTab === 'research' && (
+              <StockResearchPage initialPrompt={researchPromptHint} />
+            )}
+            {activeTab === 'strategy' && <StrategyLabPage />}
+            {activeTab === 'portfolio' && <VirtualPortfolioPage />}
+            {activeTab === 'compare' && <CompareStocksPage />}
+            {activeTab === 'library' && <ResearchLibraryPage />}
+            {activeTab === 'experiments' && <ExperimentHistoryPage />}
+            {activeTab === 'settings' && <SettingsPage />}
+            {activeTab === 'privacy' && <PrivacyPolicyPage onNavigate={handleNavigate} />}
+            {activeTab === 'terms' && <TermsPage onNavigate={handleNavigate} />}
+          </div>
+
+          {/* Persistent Credible Footer with Legal Navigation */}
+          <Footer onNavigate={handleNavigate} />
         </main>
       </div>
 

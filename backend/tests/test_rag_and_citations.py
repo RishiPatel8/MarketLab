@@ -22,7 +22,8 @@ def test_mock_embeddings_deterministic():
     assert v1 == v2  # strictly deterministic
 
 def test_rag_service_retrieval(db_session):
-    rag = RAGService(db_session)
+    mock_gen = MockEmbeddingGenerator(dim=1536)
+    rag = RAGService(db_session, embedding_generator=mock_gen)
     results = rag.retrieve_evidence("Orient Green Power wind installed capacity", symbol_hint="GREENPOWER")
     assert len(results) > 0
     top = results[0]

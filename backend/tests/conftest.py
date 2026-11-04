@@ -12,6 +12,7 @@ from app.main import app as fastapi_app
 from app.db.session import Base, get_sync_db, SyncSessionLocal
 from app.services.instrument_service import InstrumentService
 from app.services.rag_service import RAGService
+from app.rag.embeddings import MockEmbeddingGenerator
 import app.db.models
 
 # Test database engine using SQLite in-memory or file
@@ -25,7 +26,7 @@ def setup_test_db():
     Base.metadata.create_all(bind=test_engine)
     with TestingSessionLocal() as db:
         InstrumentService(db)
-        RAGService(db)
+        RAGService(db, embedding_generator=MockEmbeddingGenerator())
     yield
     Base.metadata.drop_all(bind=test_engine)
     if os.path.exists("./test_marketlab.db"):

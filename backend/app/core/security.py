@@ -6,6 +6,12 @@ API_KEY_HEADER = APIKeyHeader(name="X-API-Key", auto_error=False)
 INTERNAL_TOKEN_HEADER = APIKeyHeader(name="X-Internal-Token", auto_error=False)
 
 def get_current_user_or_api_key(api_key: str = Security(API_KEY_HEADER)):
+    if settings.APP_ENV == "production" and not settings.API_KEY_ENABLED:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Production deployment misconfiguration: API_KEY_ENABLED must be True"
+        )
+
     if not settings.API_KEY_ENABLED:
         # Default dev user identifier
         return {"user_id": "00000000-0000-0000-0000-000000000001", "role": "developer"}

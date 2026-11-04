@@ -16,11 +16,8 @@ def route_after_planner(state: ResearchWorkflowState) -> str:
     return "market_data_retrieval"
 
 def route_after_verifier(state: ResearchWorkflowState) -> str:
-    retry_count = state.get("retry_count", 0)
-    findings = state.get("verification_findings") or {}
-    
-    # If verification failed and retries remain, loop back to rag
-    if not findings.get("verification_passed", True) and retry_count < settings.MAX_AGENT_RETRIES:
+    current_step = state.get("current_step")
+    if current_step == "rag_evidence_retrieval":
         return "rag_evidence_retrieval"
     return "report_generation"
 

@@ -3,10 +3,12 @@ from app.agents.state import ResearchWorkflowState
 from app.services.market_data_service import MarketDataService
 from app.db.session import SyncSessionLocal
 
+
 def market_data_node(state: ResearchWorkflowState) -> Dict[str, Any]:
     """
     Market Data Retrieval & Validation Node:
-    Retrieves historical OHLCV bars, verifies pricing integrity, and records validation metrics.
+    Retrieves historical OHLCV bars using the configured provider (yfinance / nse_bse / fixture),
+    verifies pricing integrity, and records validation metrics.
     """
     resolved = state.get("resolved_instrument")
     if not resolved:
@@ -28,6 +30,14 @@ def market_data_node(state: ResearchWorkflowState) -> Dict[str, Any]:
             instrument_id=inst_id
         )
 
+    if not bars:
+        return {
+            "run_status": "failed",
+            "current_step": "market_data_retrieval",
+            "error_message": f"Market data retrieval failed for {exchange}:{symbol}. {'; '.join(validation.issues)}",
+            "data_validation": validation.model_dump()
+        }
+
     market_ref = {
         "symbol": symbol,
         "exchange": exchange,
@@ -35,7 +45,9 @@ def market_data_node(state: ResearchWorkflowState) -> Dict[str, Any]:
         "start_date": bars[0].timestamp.isoformat() if bars else None,
         "end_date": bars[-1].timestamp.isoformat() if bars else None,
         "latest_close": bars[-1].close if bars else None,
-        "provider": validation.provider_attribution
+        "provider": validation.provider_attribution,
+        "latency_type": validation.latency_type,
+        "is_fixture": (validation.provider_attribution == "fixture")
     }
 
     return {

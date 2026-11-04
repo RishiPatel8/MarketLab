@@ -57,19 +57,51 @@ graph TD
 - `rag/`: Text chunker, embedding generator, pgvector retriever, and evaluation harness.
 - `worker/`: Background job execution engine for long-running research runs and backtests.
 
-### 3.2 Quantitative & Backtesting Engine (`backend/app/services/quantitative_engine.py`)
-- Vectorized and event-driven indicator calculations using NumPy and pandas.
-- Standard metrics: Returns, Annualized Volatility, Sharpe Ratio, Sortino Ratio, Maximum Drawdown, Calmar Ratio, Win Rate, Profit Factor.
-- Backtest execution: Configurable SMA crossover (e.g., 20/50), explicit cash allocation, trade sizing, transaction fees (e.g., STT, brokerage, exchange fees), and execution slippage.
-- Look-Ahead Bias Prevention: Next-bar open execution upon signal generation; chronological training/testing partitions.
+### 3.2 Required Quantitative, Research, and Simulation Engines
+
+1. **Market Data Engine (`backend/app/services/market_data_service.py`)**:
+   - Authoritative NSE/BSE resolution, daily OHLCV candles, corporate actions (splits, dividends), and financial fundamentals.
+   - Rigorous data validation: high/low sanity checks, duplicate timestamp pruning, and truthful latency tagging (`daily_historical` vs `fixture`).
+
+2. **Fundamental Analysis Engine (`backend/app/analytics/fundamental_engine.py`)**:
+   - Deterministic Discounted Cash Flow (DCF) model with WACC vs Terminal Growth sensitivity matrix.
+   - 3-Stage DuPont ROE Decomposition: Net Profit Margin × Asset Turnover × Financial Leverage.
+   - Comprehensive ratio synthesis: P/E, P/B, Debt/Equity, Operating Margin, and ROCE.
+
+3. **Technical Analysis Engine (`backend/app/analytics/technical_engine.py`)**:
+   - Trend indicators: SMA (20, 50, 200), EMA (9, 21, 50, 200), Multi-timeframe trend alignment.
+   - Momentum & Oscillators: RSI(14), MACD (12, 26, 9) + Histogram, ADX(14).
+   - Volatility & Range: Bollinger Bands (20, 2σ, %B, Bandwidth), ATR(14).
+   - Execution & Levels: Cumulative VWAP, Classical Floor Pivots (P, S1-S3, R1-R3), and 20-day swing support/resistance.
+
+4. **Strategy Engine & Registry (`backend/app/analytics/strategy_engine.py`)**:
+   - 10 registered quantitative algorithms: `sma_crossover`, `ema_crossover`, `rsi_threshold`, `macd_momentum`, `bollinger_bands`, `mean_reversion`, `momentum_breakout`, `volume_breakout`, `fundamental_value`, and `risk_parity`.
+   - Multi-Strategy Consensus Engine: Executes the 10-algorithm ensemble and aggregates votes into an actionable consensus rating (BUY/HOLD/SELL/INSUFFICIENT_EVIDENCE) with percentage agreement.
+
+5. **Backtesting Engine (`backend/app/services/quantitative_engine.py`)**:
+   - Historical replay with strict next-bar Open execution to eliminate look-ahead bias.
+   - Explicit Indian market friction: 0.1% STT/brokerage fees and 0.05% slippage deductions.
+   - Out-of-sample partitioning and benchmark alpha calculation against NIFTY 50 (`^NSEI`).
+
+6. **Virtual Investment Environment (`backend/app/services/portfolio_service.py`)**:
+   - Risk-free paper trading: Virtual portfolio creation, cash balances, and position averaging.
+   - Simulated order routing: BUY/SELL market and limit orders with cash overdraft rejection.
+   - Mark-to-market valuations and real-time realized/unrealized P&L calculations.
+   - What-If Scenario Stress Testing: Simulates systemic market shocks (-15% correction, +20% rally, etc.) without contacting real brokerages.
+
+7. **Risk & Decision Intelligence Engine (`backend/app/analytics/decision_engine.py`)**:
+   - Synthesizes technical, fundamental, and consensus findings into BUY, HOLD, SELL, or INSUFFICIENT_EVIDENCE ratings.
+   - Formulates potential entry price bands, DCF fair-value ranges, 2.0x ATR downside stop-loss levels, and probabilistic Bull/Base/Bear scenario projections.
+   - Mandates SEBI non-advisory compliance notices on all outputs.
 
 ### 3.3 Frontend Architecture (`frontend/src/`)
-- React 18/19 with TypeScript and Vite.
+- React 18 with TypeScript and Vite.
 - Tailwind CSS configured with the Obsidian Gold design system.
 - Modules:
-  - **Overview**: Market snapshot, system status, quick research prompts.
-  - **Stock Research**: Interactive research workspace, real-time workflow stage stepper, cited report viewer.
-  - **Strategy Lab**: Natural-language and manual parameter strategy builder, equity curve charts, drawdown metrics.
+  - **Overview**: Market snapshot, real data feeds, natural language entry bar.
+  - **Stock Research**: Interactive research workspace, capital/horizon/risk selectors, stage stepper, cited report viewer with Decision Intelligence cards.
+  - **Strategy Lab**: Dual-mode workbench with single strategy deep dives (all 10 algorithms) and 10-model multi-strategy consensus matrix.
+  - **Virtual Portfolio**: Complete paper trading dashboard with KPI metrics, simulated order console, open holdings mark-to-market table, and what-if stress tests.
   - **Compare Stocks**: Side-by-side financial and technical comparison.
   - **Research Library**: Historical research reports with verified citation inspection.
   - **Experiment History**: Re-runnable strategy backtests with audit trails.

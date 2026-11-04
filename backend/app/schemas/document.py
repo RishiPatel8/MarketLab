@@ -39,3 +39,4 @@ class RetrievedEvidenceItem(BaseModel):
     content: str
     relevance_score: float
     content_hash: str
+    is_mock_embedding: bool = False

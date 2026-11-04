@@ -27,6 +27,7 @@ class ExperimentMetricResponse(BaseModel):
     total_trades: int
     benchmark_cagr: Optional[float] = None
     benchmark_max_drawdown: Optional[float] = None
+    out_of_sample_metrics: Optional[Dict[str, Any]] = None
     equity_curve: List[Dict[str, Any]] = []
     trades: List[Dict[str, Any]] = []
 

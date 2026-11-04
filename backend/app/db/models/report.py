@@ -1,6 +1,6 @@
 import uuid
 from datetime import datetime, timezone
-from sqlalchemy import Column, String, Text, DateTime, ForeignKey, Index
+from sqlalchemy import Column, String, Text, DateTime, ForeignKey, Index, Float
 from app.db.session import Base
 
 class Report(Base):
@@ -20,6 +20,21 @@ class Report(Base):
     verification_findings_json = Column(Text, nullable=True)  # JSON object
     limitations_json = Column(Text, nullable=True)  # JSON array
     report_version = Column(String(20), default="1.0.0")
+    
+    # Decision Intelligence fields
+    decision_rating = Column(String(50), default="INSUFFICIENT_EVIDENCE")  # BUY, HOLD, SELL, INSUFFICIENT_EVIDENCE
+    entry_price_min = Column(Float, nullable=True)
+    entry_price_max = Column(Float, nullable=True)
+    fair_value_min = Column(Float, nullable=True)
+    fair_value_max = Column(Float, nullable=True)
+    target_bull = Column(Float, nullable=True)
+    target_base = Column(Float, nullable=True)
+    target_bear = Column(Float, nullable=True)
+    stop_loss_price = Column(Float, nullable=True)
+    horizon_type = Column(String(50), default="medium_term")  # short_term, medium_term, long_term
+    strategy_consensus_json = Column(Text, nullable=True)
+    scenario_projections_json = Column(Text, nullable=True)
+    
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc), index=True)
 
 

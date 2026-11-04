@@ -19,3 +19,11 @@ class BaseMarketDataProvider(ABC):
     def get_latest_price(self, symbol: str, exchange: str = "NSE") -> Optional[float]:
         """Retrieve the latest observed price."""
         pass
+
+    def get_corporate_actions(self, symbol: str, exchange: str = "NSE") -> dict:
+        """Retrieve splits and dividends information."""
+        return {"splits": [], "dividends": []}
+
+    def get_company_fundamentals(self, symbol: str, exchange: str = "NSE") -> dict:
+        """Retrieve company fundamental snapshot metrics."""
+        return {}

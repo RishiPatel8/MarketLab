@@ -1,0 +1,53 @@
+Open Ended Schemes ( Equity Scheme - Large Cap Fund )
+HDFC Mutual Fund
+119551;INF179K01BE2;INF179K01BF9;HDFC Top 100 Fund - Growth Option - Direct Plan;1145.234;25-Oct-2026
+119552;INF179K01BG7;INF179K01BH5;HDFC Top 100 Fund - Regular Plan - Growth;1023.125;25-Oct-2026
+119553;INF179K01BI3;INF179K01BJ1;HDFC Top 100 Fund - Direct Plan - IDCW;68.450;25-Oct-2026
+
+SBI Mutual Fund
+120503;INF200K01UT4;INF200K01UU2;SBI Bluechip Fund - Direct Plan - Growth;94.321;25-Oct-2026
+120504;INF200K01UV0;INF200K01UW8;SBI Bluechip Fund - Regular Plan - Growth;86.110;25-Oct-2026
+
+ICICI Prudential Mutual Fund
+120594;INF109K01U74;INF109K01U82;ICICI Prudential Bluechip Fund - Direct Plan - Growth;112.560;25-Oct-2026
+120595;INF109K01U90;INF109K01V16;ICICI Prudential Bluechip Fund - Regular Plan - Growth;101.420;25-Oct-2026
+
+Mirae Asset Mutual Fund
+120465;INF769K01HQ5;INF769K01HR3;Mirae Asset Large Cap Fund - Direct Plan - Growth;128.900;25-Oct-2026
+120466;INF769K01HS1;INF769K01HT9;Mirae Asset Large Cap Fund - Regular Plan - Growth;115.340;25-Oct-2026
+
+Axis Mutual Fund
+120716;INF846K01DP8;INF846K01DQ6;Axis Bluechip Fund - Direct Plan - Growth;62.400;25-Oct-2026
+120717;INF846K01DR4;INF846K01DS2;Axis Bluechip Fund - Regular Plan - Growth;56.890;25-Oct-2026
+
+Open Ended Schemes ( Equity Scheme - Flexi Cap Fund )
+Parag Parikh Mutual Fund
+125497;INF666M01BW2;INF666M01BX0;Parag Parikh Flexi Cap Fund - Direct Plan - Growth;82.350;25-Oct-2026
+125498;INF666M01BY8;INF666M01BZ5;Parag Parikh Flexi Cap Fund - Regular Plan - Growth;74.120;25-Oct-2026
+
+DSP Mutual Fund
+118989;INF740K01EY4;INF740K01EZ1;DSP Flexi Cap Fund - Direct Plan - Growth;98.760;25-Oct-2026
+
+HDFC Mutual Fund
+119062;INF179K01CN1;INF179K01CO9;HDFC Flexi Cap Fund - Direct Plan - Growth;1854.210;25-Oct-2026
+
+Kotak Mahindra Mutual Fund
+120152;INF174K01LS2;INF174K01LT0;Kotak Flexicap Fund - Direct Plan - Growth;84.560;25-Oct-2026
+
+Open Ended Schemes ( Equity Scheme - Small Cap Fund )
+Nippon India Mutual Fund
+119598;INF204K01E37;INF204K01E45;Nippon India Small Cap Fund - Direct Plan - Growth;175.400;25-Oct-2026
+119599;INF204K01E52;INF204K01E60;Nippon India Small Cap Fund - Regular Plan - Growth;158.200;25-Oct-2026
+
+Quant Mutual Fund
+149976;INF090I01239;INF090I01247;Quant Small Cap Fund - Direct Plan - Growth;245.120;25-Oct-2026
+149977;INF090I01254;INF090I01262;Quant Small Cap Fund - Regular Plan - Growth;222.840;25-Oct-2026
+
+Tata Mutual Fund
+120828;INF917K01HD1;INF917K01HE9;Tata Digital India Fund - Direct Plan - Growth;52.300;25-Oct-2026
+
+UTI Mutual Fund
+122639;INF789F01AX8;INF789F01AY6;UTI Nifty 50 Index Fund - Direct Plan - Growth;185.600;25-Oct-2026
+
+Bandhan Mutual Fund
+118269;INF767K01011;INF767K01029;Bandhan Sterling Value Fund - Direct Plan - Growth;142.300;25-Oct-2026
