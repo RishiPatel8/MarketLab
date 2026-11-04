@@ -32,43 +32,63 @@ interface BenchmarkCardState {
 
 const DEFAULT_BENCHMARKS: BenchmarkCardState[] = [
   {
-    title: "NIFTY 50 Benchmark",
+    title: "NIFTY 50 (^NSEI)",
     symbol: "^NSEI",
-    value: "22,749.75",
-    change: "-0.02%",
-    isPositive: false,
-    subtitle: "Annualized Vol: 12.8% • Broad Market",
-    sentiment: "neutral",
-    loading: true
-  },
-  {
-    title: "Orient Green Power (GREENPOWER)",
-    symbol: "GREENPOWER",
-    value: "₹7.94",
-    change: "+1.53%",
+    value: "23,960.60",
+    change: "+0.28%",
     isPositive: true,
-    subtitle: "NSE/BSE Listed • 402.3 MW Wind",
+    subtitle: "NSE • 50 Blue Chip Companies",
     sentiment: "gold",
     loading: true
   },
   {
-    title: "Reliance Industries (RELIANCE)",
-    symbol: "RELIANCE",
-    value: "₹1,196.20",
-    change: "-0.47%",
+    title: "BSE SENSEX (^BSESN)",
+    symbol: "^BSESN",
+    value: "77,301.40",
+    change: "+0.31%",
+    isPositive: true,
+    subtitle: "BSE • 30 Blue Chip Leaders",
+    sentiment: "positive",
+    loading: true
+  },
+  {
+    title: "NIFTY Bank (^NSEBANK)",
+    symbol: "^NSEBANK",
+    value: "55,913.60",
+    change: "+0.45%",
+    isPositive: true,
+    subtitle: "NSE • Banking & Financial Sector",
+    sentiment: "positive",
+    loading: true
+  },
+  {
+    title: "NIFTY IT (^CNXIT)",
+    symbol: "^CNXIT",
+    value: "32,061.90",
+    change: "-0.22%",
     isPositive: false,
-    subtitle: "O2C, Jio 5G, Jamnagar Energy",
+    subtitle: "NSE • Information Technology Sector",
     sentiment: "negative",
     loading: true
   },
   {
-    title: "Infosys Limited (INFY)",
-    symbol: "INFY",
-    value: "₹1,845.00",
-    change: "+0.85%",
+    title: "India VIX (^INDIAVIX)",
+    symbol: "^INDIAVIX",
+    value: "15.19",
+    change: "-1.85%",
+    isPositive: false,
+    subtitle: "NSE • Market Volatility Gauge",
+    sentiment: "neutral",
+    loading: true
+  },
+  {
+    title: "NIFTY 500 (^CRSLDX)",
+    symbol: "^CRSLDX",
+    value: "22,769.20",
+    change: "+0.34%",
     isPositive: true,
-    subtitle: "IT Services & Cloud Digital",
-    sentiment: "positive",
+    subtitle: "NSE • Broad Indian Equities Universe",
+    sentiment: "gold",
     loading: true
   }
 ];
@@ -102,12 +122,12 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({ onNavigate }) => {
                 : `₹${latest.close.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
               return {
-                title: `${inst.company_name} (${inst.symbol})`,
+                title: bench.title,
                 symbol: inst.symbol,
                 value: formattedVal,
                 change: `${chgPct >= 0 ? '+' : ''}${chgPct.toFixed(2)}%`,
                 isPositive: chgPct >= 0,
-                subtitle: `${inst.exchange} • ${inst.sector || inst.instrument_type} • Verified Bar`,
+                subtitle: bench.subtitle,
                 sentiment: (chgPct >= 0 ? 'positive' : 'negative') as 'positive' | 'negative',
                 loading: false
               };
@@ -216,8 +236,8 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({ onNavigate }) => {
       <div>
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-4">
           <div>
-            <h3 className="text-base font-bold text-obsidian-text">Reference Market Data (NSE & BSE Feeds)</h3>
-            <p className="text-xs text-obsidian-muted">Original market data feeds via yfinance & AMFI official master. Not synthetic mock data.</p>
+            <h3 className="text-base font-bold text-obsidian-text">Major Indian Market Indices (NSE & BSE)</h3>
+            <p className="text-xs text-obsidian-muted">Official benchmark, sectoral, and volatility indices via verified daily feeds.</p>
           </div>
           <div className="flex items-center gap-2">
             <span className="text-[11px] font-mono text-gold px-2 py-0.5 rounded bg-gold/10 border border-gold/20">
@@ -229,7 +249,7 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({ onNavigate }) => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {benchmarkCards.map((card, idx) => (
             <MetricCard
               key={idx}

@@ -113,6 +113,66 @@ SEED_INSTRUMENTS = [
         "sector": "Indices",
         "industry": "Broad Market Benchmark",
         "isin": "IN0000000001"
+    },
+    {
+        "exchange": "BSE",
+        "symbol": "^BSESN",
+        "company_name": "BSE SENSEX Benchmark Index",
+        "canonical_name": "BSE SENSEX Benchmark Index",
+        "display_name": "BSE SENSEX Benchmark Index (^BSESN)",
+        "instrument_type": "INDEX",
+        "currency": "INR",
+        "sector": "Indices",
+        "industry": "BSE 30 Blue Chip Benchmark",
+        "isin": "IN0000000002"
+    },
+    {
+        "exchange": "NSE",
+        "symbol": "^NSEBANK",
+        "company_name": "NIFTY Bank Index",
+        "canonical_name": "NIFTY Bank Index",
+        "display_name": "NIFTY Bank Index (^NSEBANK)",
+        "instrument_type": "INDEX",
+        "currency": "INR",
+        "sector": "Indices",
+        "industry": "Banking Sector Index",
+        "isin": "IN0000000003"
+    },
+    {
+        "exchange": "NSE",
+        "symbol": "^CNXIT",
+        "company_name": "NIFTY IT Index",
+        "canonical_name": "NIFTY IT Index",
+        "display_name": "NIFTY IT Index (^CNXIT)",
+        "instrument_type": "INDEX",
+        "currency": "INR",
+        "sector": "Indices",
+        "industry": "Information Technology Sector",
+        "isin": "IN0000000004"
+    },
+    {
+        "exchange": "NSE",
+        "symbol": "^INDIAVIX",
+        "company_name": "India VIX Volatility Index",
+        "canonical_name": "India VIX Volatility Index",
+        "display_name": "India VIX Volatility Index (^INDIAVIX)",
+        "instrument_type": "INDEX",
+        "currency": "INR",
+        "sector": "Indices",
+        "industry": "Market Volatility Gauge",
+        "isin": "IN0000000005"
+    },
+    {
+        "exchange": "NSE",
+        "symbol": "^CRSLDX",
+        "company_name": "NIFTY 500 Broad Market Index",
+        "canonical_name": "NIFTY 500 Broad Market Index",
+        "display_name": "NIFTY 500 Index (^CRSLDX)",
+        "instrument_type": "INDEX",
+        "currency": "INR",
+        "sector": "Indices",
+        "industry": "Broad Market 500 Index",
+        "isin": "IN0000000006"
     }
 ]
 

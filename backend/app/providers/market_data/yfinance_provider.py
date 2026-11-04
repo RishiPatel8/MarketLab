@@ -39,8 +39,12 @@ class YFinanceMarketDataProvider(BaseMarketDataProvider):
 
     def resolve_provider_symbol(self, symbol: str, exchange: str = "NSE") -> str:
         sym_clean = symbol.strip().upper()
-        if sym_clean in ("^NSEI", "NIFTY50"):
+        if sym_clean.startswith("^"):
+            return sym_clean
+        if sym_clean in ("NIFTY50", "NIFTY"):
             return "^NSEI"
+        if sym_clean in ("SENSEX", "BSESENSEX"):
+            return "^BSESN"
 
         if exchange.upper() == "BSE":
             base = sym_clean.replace(".NS", "").replace(".BO", "")
@@ -50,7 +54,7 @@ class YFinanceMarketDataProvider(BaseMarketDataProvider):
             return self.SYMBOL_MAP[sym_clean]
 
         # If already formatted with suffix
-        if sym_clean.endswith(".NS") or sym_clean.endswith(".BO") or sym_clean.startswith("^"):
+        if sym_clean.endswith(".NS") or sym_clean.endswith(".BO"):
             return sym_clean
 
         return f"{sym_clean}.NS"
